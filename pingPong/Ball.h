@@ -31,6 +31,8 @@ public:
 	Ball(float,float,float,float,float); // x y speedX speedY radius
 	
 	void updateBallSpeed();
+
+	void resetTheGame();
 	
 	~Ball();
 };

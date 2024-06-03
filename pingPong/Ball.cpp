@@ -79,6 +79,12 @@ void Ball::playMusic(int music)
 
 }
 
+void Ball::resetTheGame()
+{
+	playerScore_ = 0;
+	cpuScore_ = 0;
+}
+
 Ball::~Ball()
 {
 	UnloadSound(gameOver_);

@@ -22,15 +22,21 @@ float centerOfScreenX = WIDTH / 2.0f;
 float centerOfScreenY = HEIGHT / 2.0f;
 float batCenterY = batHeight / 2.0f;
 float batCenterX = batWidth / 2.0f;
+typedef enum GameScreen {mainMenu=0,gameScreen,endScreen} GameScreen;
+bool winStatus = false;
 
 void checkForCollisionWithBat(Ball& ball, Bat& theBat, Sound& ballHitsBat);
 void drawFieldAndScore(Ball& pingPongBall);
 void drawBatAndBall(Ball& pingPongBall, Bat& playerBat, CpuBat& botBat);
 void updateTheScreen(Ball& pingPongBall, Bat& playerBat, CpuBat& botBat);
+void drawMainMenu(GameScreen& currentScreen);
+void isButtonPressed(GameScreen& currentScreen);
+void gameEndCondition(Ball& pingPongBall, GameScreen& currentScreen);
+void endGameDisplay(GameScreen& currentScreen);
 
 int main()
 {
-	
+	GameScreen currentScreen = mainMenu;
 	InitWindow(WIDTH, HEIGHT, "Ping Pong Game");
 	InitAudioDevice();
 	Image icon = LoadImage("media\\puck.png");
@@ -47,26 +53,94 @@ int main()
 	{
 		// Updating the Screen
 		BeginDrawing();
-		
-		// Updates the screen with necessary changes
-		updateTheScreen(pingPongBall, playerBat, botBat);
+		switch (currentScreen)
+		{
+		case mainMenu:
+			drawMainMenu(currentScreen);
+			break;
+		case gameScreen:
+			// Updates the screen with necessary changes
+			updateTheScreen(pingPongBall, playerBat, botBat);
 
-		//Checking for collision
-		checkForCollisionWithBat(pingPongBall, playerBat, ballHitsBat); // collision with the plaerBat
-		checkForCollisionWithBat(pingPongBall, botBat, ballHitsBat);   // collision with the cpu bat
+			//Checking for collision
+			checkForCollisionWithBat(pingPongBall, playerBat, ballHitsBat); // collision with the plaerBat
+			checkForCollisionWithBat(pingPongBall, botBat, ballHitsBat);   // collision with the cpu bat
+			// This function draws the field and the writes the score on the field
+			drawFieldAndScore(pingPongBall);
 
-		// This function draws the field and the writes the score on the field
-		drawFieldAndScore(pingPongBall);
-
-		// This function draws the bats and ball on the field
-		drawBatAndBall(pingPongBall, playerBat, botBat);
-
+			// This function draws the bats and ball on the field
+			drawBatAndBall(pingPongBall, playerBat, botBat);
+			gameEndCondition(pingPongBall, currentScreen);
+			break;
+		case endScreen:
+			endGameDisplay(currentScreen);
+			break;
+		default:
+			break;
+		}
 		EndDrawing();
 	}
 	UnloadSound(ballHitsBat);
 	CloseAudioDevice();
 	CloseWindow();
 	return 0;
+}
+
+void endGameDisplay(GameScreen& currentScreen)
+{
+	ClearBackground(SKYBLUE);
+	if (winStatus == false)
+	{
+		DrawText("You Lost!", 300, 300, 50, WHITE);
+		isButtonPressed(currentScreen);
+		
+	}
+	else
+	{
+		DrawText("You Won!", 300, 300, 50, WHITE);
+		isButtonPressed(currentScreen);
+	}
+}
+
+void gameEndCondition(Ball& pingPongBall,GameScreen& currentScreen)
+{
+	if (pingPongBall.cpuScore_ == 10)
+	{
+		currentScreen = endScreen;
+		pingPongBall.resetTheGame();
+	}
+	else if (pingPongBall.playerScore_ == 10)
+	{
+		currentScreen = endScreen;
+		pingPongBall.resetTheGame();
+		winStatus = true;
+	}
+}
+
+void drawMainMenu(GameScreen& currentScreen)
+{
+	ClearBackground(SKYBLUE);
+	DrawText("Press Enter To Play The Game", 300, 300, 50, WHITE);
+	DrawText("*First to 10 points wins the game", 300, 400, 30, WHITE);
+	isButtonPressed(currentScreen);
+}
+
+void isButtonPressed(GameScreen& currentScreen)
+{
+	if (IsKeyPressed(KEY_ENTER))
+	{
+		switch (currentScreen)
+		{
+		case mainMenu:
+			currentScreen = gameScreen;
+			break;
+		case endScreen:
+			currentScreen = mainMenu;
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void checkForCollisionWithBat(Ball& ball,Bat& theBat,Sound& ballHitsBat)
