@@ -6,6 +6,7 @@ void Ball::Draw()
 	DrawCircle(xCoordinate_, yCoordinate_, radius_, WHITE);
 }
 
+// Constructor
 Ball::Ball(float x,float y,float speedX,float speedY,float radius)
 {
 	xCoordinate_ = x;
@@ -56,6 +57,7 @@ void Ball::updateBallSpeed()
 	// --
 }
 
+// resets the position of the ball after either cpu or player scores a point
 void Ball::resetBall()
 {
 	xCoordinate_ = GetScreenWidth() / 2;
@@ -79,12 +81,14 @@ void Ball::playMusic(int music)
 
 }
 
+// This resets the scores of the player and the cpu
 void Ball::resetTheGame()
 {
 	playerScore_ = 0;
 	cpuScore_ = 0;
 }
 
+// This destructor unloads the music
 Ball::~Ball()
 {
 	UnloadSound(gameOver_);

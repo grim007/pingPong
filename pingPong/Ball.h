@@ -32,6 +32,7 @@ public:
 	
 	void updateBallSpeed();
 
+	// Reset the game
 	void resetTheGame();
 	
 	~Ball();

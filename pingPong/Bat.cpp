@@ -13,15 +13,15 @@ Bat::Bat(float x, float y, float speed, float width, float height)
 
 void Bat::Draw()
 {
-	//DrawRectangle(xCoordinate_, yCoordinate_, width_, height_, WHITE);
 	DrawRectangleRounded(Rectangle{ xCoordinate_,yCoordinate_,width_,height_ }, 1, 4, RAYWHITE);
 }
 
+// Update the position of the bat depending upon the buttons pressed
 void Bat::updateBatPosition()
 {
 	if (IsKeyDown(KEY_UP))
 	{
-		if(yCoordinate_>=0)
+		if(yCoordinate_>=0) // This ensures bound control for the bats
 			yCoordinate_ -= speedY_;
 	}
 	if (IsKeyDown(KEY_DOWN))
@@ -29,6 +29,4 @@ void Bat::updateBatPosition()
 		if (yCoordinate_+height_ <= GetScreenHeight())
 			yCoordinate_ += speedY_;
 	}
-
-	
 }
